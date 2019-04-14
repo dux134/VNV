@@ -3,6 +3,7 @@ package in.book.vnv.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -25,8 +26,14 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import in.book.vnv.R;
@@ -46,6 +53,7 @@ public class Dashboard extends AppCompatActivity {
 
 
     private TextView totalQuestion,solvedQuestion,noOfTestGiven,averageScore;
+    private String APPFOLDER = "f";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,7 @@ public class Dashboard extends AppCompatActivity {
                 }
             }
         });
+        createAppFolder();
         loadImageInSlider();
 
         recyclerView1 = findViewById(R.id.quicktext_recycler);
@@ -107,6 +116,64 @@ public class Dashboard extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void createAppFolder() {
+        String path = Environment.getExternalStorageDirectory() + "/Android/data/in.book.vnv/";
+        File f1 = new File(path);
+        if(!f1.exists())
+            f1.mkdir();
+        File root = new File(path+"app.json");
+        Log.d(TAG, "createAppFolder: "+root.toString());
+        if (!root.exists()) {
+            try {
+                root.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        writeToFile("hi",path+"app.json");
+    }
+
+    private void writeToFile(String data,String filename) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private String readFromFile(String filename) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = getApplicationContext().openFileInput(filename);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 
     @Override

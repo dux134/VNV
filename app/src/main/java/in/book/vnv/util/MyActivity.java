@@ -8,8 +8,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-import in.a_comic.a_comic.SplashScreen;
-
 
 public class MyActivity extends AppCompatActivity {
 
@@ -65,11 +63,11 @@ public class MyActivity extends AppCompatActivity {
     }
 
     private String getAdId() {
-        if(SplashScreen.addCount == 1) {
-            return prefManager.getAdmobIdDux();
-        } else {
+//        if(SplashScreen.addCount == 1) {
+//            return prefManager.getAdmobIdDux();
+//        } else {
             return prefManager.getAdmobId();
-        }
+//        }
 //        return "";
     }
 
@@ -81,10 +79,10 @@ public class MyActivity extends AppCompatActivity {
             public void run() {
                 if (mInterstitialAd.isLoaded()) {
 //                    Toast.makeText(getApplicationContext(), "loaded " + Dashboard.addCount, Toast.LENGTH_SHORT).show();
-                    if (SplashScreen.addCount == 0)
-                        SplashScreen.addCount = 1;
-                    else
-                        SplashScreen.addCount = 0;
+//                    if (SplashScreen.addCount == 0)
+//                        SplashScreen.addCount = 1;
+//                    else
+//                        SplashScreen.addCount = 0;
                     mInterstitialAd.show();
                 }
 
