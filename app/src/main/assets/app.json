@@ -1,0 +1,34 @@
+﻿{
+  "quicktests": {
+    "nooftest": "90",
+    "averagescore": "45 %"
+  },
+  "lasttestscores": {
+    "1": {
+      "total": "100",
+      "solved": "89",
+      "correct": "55",
+      "date": "30\/10\/1206"
+    },
+    "2": {
+      "total": "100",
+      "solved": "89",
+      "correct": "55",
+      "date": "30\/10\/1206"
+    }
+  },
+  "practice": {
+    "noofquestions": {
+      "1": {
+        "name": "analogy",
+        "solved": "1",
+        "total": "100"
+      },
+      "2": {
+        "name": "series",
+        "solved": "3",
+        "total": "100"
+      }
+    }
+  }
+}

@@ -27,12 +27,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -50,6 +54,7 @@ public class Dashboard extends AppCompatActivity {
     private RecyclerView recyclerView1;
     private RecyclerView.Adapter adapter1;
     private static ArrayList<DailyScore> list1 = new ArrayList<>();
+    private final String PATH = Environment.getExternalStorageDirectory() + "/Android/data/in.book.vnv/";
 
 
     private TextView totalQuestion,solvedQuestion,noOfTestGiven,averageScore;
@@ -118,28 +123,23 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
-    private void createAppFolder() {
-        String path = Environment.getExternalStorageDirectory() + "/Android/data/in.book.vnv/";
-        File f1 = new File(path);
+    private void createAppFolder() { ;
+        File f1 = new File(PATH);
         if(!f1.exists())
             f1.mkdir();
-        File root = new File(path+"app.json");
+        File root = new File(PATH+"app.json");
         Log.d(TAG, "createAppFolder: "+root.toString());
         if (!root.exists()) {
-            try {
-                root.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            copyFile("app.json");
         }
-        writeToFile("hi",path+"app.json");
+        Log.d(TAG, "createAppFolder: "+readFromFile(PATH+"app.json"));
     }
 
     private void writeToFile(String data,String filename) {
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
+            FileOutputStream out = new FileOutputStream(new File(filename));
+            out.write(data.getBytes());
+            out.flush();
         }
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
@@ -147,22 +147,17 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private String readFromFile(String filename) {
-
         String ret = "";
-
         try {
-            InputStream inputStream = getApplicationContext().openFileInput(filename);
-
+            FileInputStream inputStream = new FileInputStream (new File(filename));
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
-
                 while ( (receiveString = bufferedReader.readLine()) != null ) {
                     stringBuilder.append(receiveString);
                 }
-
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
@@ -172,7 +167,6 @@ public class Dashboard extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
         }
-
         return ret;
     }
 
@@ -187,19 +181,9 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
-    public String AssetJSONFile (String filename, Context context) throws IOException {
-        AssetManager manager = context.getAssets();
-        InputStream file = manager.open(filename);
-        byte[] formArray = new byte[file.available()];
-        file.read(formArray);
-        file.close();
-        return new String(formArray);
-    }
-
-
     public void loadScoreData() throws IOException, JSONException {
         list1.clear();
-        String data = AssetJSONFile("dashboard.json",getApplicationContext());
+        String data = readFromFile(PATH+"app.json");
         JSONObject object = new JSONObject(data).getJSONObject("lasttestscores");
         Log.d(TAG, "loadScoreData: " + object.length() );
         for(int i=1;i<=object.length();i++) {
@@ -229,6 +213,32 @@ public class Dashboard extends AppCompatActivity {
         CircleIndicator indicator = (CircleIndicator)findViewById(R.id.indicator);
         viewpager.setCurrentItem(2);
         indicator.setViewPager(viewpager);
+    }
+
+    private void copyFile(String filename) {
+        AssetManager assetManager = this.getAssets();
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = assetManager.open(filename);
+            String newFileName = PATH + filename;
+            out = new FileOutputStream(newFileName);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+        } catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
+
     }
 
     @Override
