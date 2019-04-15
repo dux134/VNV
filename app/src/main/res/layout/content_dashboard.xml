@@ -241,7 +241,7 @@
                             android:textAlignment="center" />
 
                         <customfonts.MyTextView_Varela
-                            android:id="@+id/myTextView4"
+                            android:id="@+id/dashboard_average_score"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
@@ -272,7 +272,7 @@
                             android:textAlignment="center" />
 
                         <customfonts.MyTextView_Varela
-                            android:id="@+id/myTextView2"
+                            android:id="@+id/dashboard_no_of_testgiven"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"

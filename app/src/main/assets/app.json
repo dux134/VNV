@@ -30,5 +30,9 @@
         "total": "100"
       }
     }
+  },
+  "practiceDashboard" : {
+    "solvedQuestion" : "390",
+    "totalQuestion" : "500"
   }
 }

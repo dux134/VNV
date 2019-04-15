@@ -58,7 +58,6 @@ public class Dashboard extends AppCompatActivity {
 
 
     private TextView totalQuestion,solvedQuestion,noOfTestGiven,averageScore;
-    private String APPFOLDER = "f";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +84,12 @@ public class Dashboard extends AppCompatActivity {
         });
         createAppFolder();
         loadImageInSlider();
+
+
+        totalQuestion = findViewById(R.id.practice_totalquestion);
+        solvedQuestion = findViewById(R.id.practice_solvedquestion);
+        noOfTestGiven = findViewById(R.id.dashboard_no_of_testgiven);
+        averageScore = findViewById(R.id.dashboard_average_score);
 
         recyclerView1 = findViewById(R.id.quicktext_recycler);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -176,6 +181,7 @@ public class Dashboard extends AppCompatActivity {
         try {
             loadScoreData();
             loadJsonData();
+            loadTextFileds();
         } catch (Exception e) {
 
         }
@@ -239,6 +245,20 @@ public class Dashboard extends AppCompatActivity {
             Log.e("tag", e.getMessage());
         }
 
+    }
+
+    private void loadTextFileds() {
+        try {
+            String data = readFromFile(PATH + "app.json");
+            JSONObject object = new JSONObject(data);
+            JSONObject ob1 = object.getJSONObject("quicktests");
+            noOfTestGiven.setText(ob1.getString("nooftest"));
+            averageScore.setText(ob1.getString("averagescore"));
+            JSONObject ob2 = object.getJSONObject("practiceDashboard");
+            solvedQuestion.setText(ob2.getString("solvedQuestion"));
+            totalQuestion.setText(ob2.getString("totalQuestion"));
+        } catch(Exception e) {
+        }
     }
 
     @Override
