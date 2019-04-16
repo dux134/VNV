@@ -1,7 +1,9 @@
 ﻿{
   "quicktests": {
     "nooftest": "90",
-    "averagescore": "45 %"
+    "averagescore": "45 %",
+    "totalScore" : "500",
+    "totalTotal" : "500"
   },
   "lasttestscores": {
     "1": {
