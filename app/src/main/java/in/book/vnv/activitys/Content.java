@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -67,13 +68,22 @@ public class Content extends AppCompatActivity {
     private void loadContentList() throws JSONException {
         list.clear();
         String data = readFromFile(Dashboard.PATH+"app.json");
-        JSONObject object = new JSONObject(data).getJSONObject("practice").getJSONObject("noofquestions");
+        JSONObject ob1 = new JSONObject(data);
+        JSONObject object = ob1.getJSONObject("practice").getJSONObject("noofquestions");
         for(int i=1;i<=object.length();i++) {
             JSONObject ob = object.getJSONObject(i + "");
             int n = Integer.parseInt(ob.getString("solved"));
             int d = Integer.parseInt(ob.getString("total"));
             DecimalFormat format = new DecimalFormat("#0.0");
             list.add(new ContentDataModel(ob.getString("name"),n+"",d+"",format.format((Double.parseDouble(n+"")/d)*100)));
+            ob.put("total",++d);
+            try {
+                PrintWriter pw = new PrintWriter(Dashboard.PATH+"app.json");
+//                pw.write(ob1.toString());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Log.d("TAG", "loadContentList: "+ob1.toString());
             }
         adapter.notifyDataSetChanged();
     }

@@ -55,8 +55,6 @@ public class Dashboard extends AppCompatActivity {
     private RecyclerView.Adapter adapter1;
     private static ArrayList<DailyScore> list1 = new ArrayList<>();
     public final static String PATH = Environment.getExternalStorageDirectory() + "/Android/data/in.book.vnv/";
-
-
     private TextView totalQuestion,solvedQuestion,noOfTestGiven,averageScore;
 
     @Override
