@@ -2,8 +2,8 @@
   "quicktests": {
     "nooftest": "90",
     "averagescore": "45 %",
-    "totalScore" : "500",
-    "totalTotal" : "500"
+    "totalScore": "500",
+    "totalTotal": "500"
   },
   "lasttestscores": {
     "1": {
@@ -20,21 +20,35 @@
     }
   },
   "practice": {
-    "noofquestions": {
+    "1": {
+      "name": "analogy",
+      "solved": "1",
+      "total": "100",
       "1": {
-        "name": "analogy",
-        "solved": "1",
-        "total": "100"
+        "solved": "",
+        "total": "",
+        "question": "",
+        "questions": {
+          "1": "true",
+          "2": "false",
+          "3": "true"
+        }
       },
       "2": {
-        "name": "series",
-        "solved": "3",
-        "total": "100"
+        "solved": "",
+        "total": "",
+        "question": "",
+        "questions": {
+          "1": "",
+          "2": "",
+          "3": ""
+        }
       }
+    },
+    "2": {
+      "name": "series",
+      "solved": "3",
+      "total": "100"
     }
-  },
-  "practiceDashboard" : {
-    "solvedQuestion" : "390",
-    "totalQuestion" : "500"
   }
 }

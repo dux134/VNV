@@ -41,6 +41,7 @@ public class Content extends AppCompatActivity {
         adapter = new ContentAdapter(list, Content.this, new ContentAdapter.RecyclerItemListener() {
             @Override
             public void onClick(View view, int adapterPosition) {
+                Chapters.chapterName = adapterPosition+1 +"";
                 startActivity(new Intent(Content.this, Chapters.class));
             }
         });
@@ -69,22 +70,15 @@ public class Content extends AppCompatActivity {
         list.clear();
         String data = readFromFile(Dashboard.PATH+"app.json");
         JSONObject ob1 = new JSONObject(data);
-        JSONObject object = ob1.getJSONObject("practice").getJSONObject("noofquestions");
+        JSONObject object = ob1.getJSONObject("practice");
         for(int i=1;i<=object.length();i++) {
             JSONObject ob = object.getJSONObject(i + "");
             int n = Integer.parseInt(ob.getString("solved"));
             int d = Integer.parseInt(ob.getString("total"));
             DecimalFormat format = new DecimalFormat("#0.0");
             list.add(new ContentDataModel(ob.getString("name"),n+"",d+"",format.format((Double.parseDouble(n+"")/d)*100)));
-            ob.put("total",++d);
-            try {
-                PrintWriter pw = new PrintWriter(Dashboard.PATH+"app.json");
-//                pw.write(ob1.toString());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
-            Log.d("TAG", "loadContentList: "+ob1.toString());
-            }
+        Log.d("TAG", "loadContentListlllll: "+ob1.toString());
         adapter.notifyDataSetChanged();
     }
 
@@ -110,12 +104,5 @@ public class Content extends AppCompatActivity {
             Log.e("login activity", "Can not read file: " + e.toString());
         }
         return ret;
-    }
-
-    static {
-        list.add(new ContentDataModel("Analogy","125","235","52"));
-        list.add(new ContentDataModel("Blood Relation","125","235","52"));
-        list.add(new ContentDataModel("Coding and Decoding","125","235","52"));
-        list.add(new ContentDataModel("Series","125","235","52"));
     }
 }

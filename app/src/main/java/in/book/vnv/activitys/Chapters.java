@@ -7,23 +7,35 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import in.book.vnv.R;
 import in.book.vnv.adapters.ChaptersAdapter;
 import in.book.vnv.adapters.QuestionAdapter;
 import in.book.vnv.entity.ChaptersDataModel;
+import in.book.vnv.entity.ContentDataModel;
 
 public class Chapters extends AppCompatActivity {
     private ArrayList<ChaptersDataModel> list = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ProgressDialog progressDialog;
+    public static String chapterName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +43,9 @@ public class Chapters extends AppCompatActivity {
         setContentView(R.layout.activity_chapters);
 
         progressDialog = new ProgressDialog(Chapters.this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+//        progressDialog.setMessage("Loading...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
         recyclerView = findViewById(R.id.chapters_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new ChaptersAdapter(list, Chapters.this, new ChaptersAdapter.RecyclerItemListener() {
@@ -44,20 +56,54 @@ public class Chapters extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        Toast.makeText(getApplicationContext(),chapterName,Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadData();
+        try {
+            loadListData();
+//            progressDialog.dismiss();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
-
-    public void loadData() {
-        list.clear();
-        list.add(new ChaptersDataModel("Exercise 1","23","50","1 - 100"));
-        list.add(new ChaptersDataModel("Exercise 2","23","50","101 - 200"));
-        list.add(new ChaptersDataModel("Exercise 3","23","50","201 - 300"));
+    private void loadListData() throws JSONException {
+    list.clear();
+    String data = readFromFile(Dashboard.PATH+"app.json");
+    JSONObject ob1 = new JSONObject(data);
+    JSONObject object = ob1.getJSONObject("practice").getJSONObject(chapterName);
+        for(int i=1;i<=object.length();i++) {
+        JSONObject ob = object.getJSONObject(i + "");
+        list.add(new ChaptersDataModel("Exercise "+i,"",ob.length()+"",""));
+    }
+        Log.d("TAG", "loadContentList: "+ob1.toString());
         adapter.notifyDataSetChanged();
-        progressDialog.dismiss();
+}
+
+    private String readFromFile(String filename) {
+        String ret = "";
+        try {
+            FileInputStream inputStream = new FileInputStream (new File(filename));
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+        return ret;
     }
 }
