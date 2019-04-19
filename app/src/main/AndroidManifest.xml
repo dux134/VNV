@@ -13,13 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.Chapters"></activity>
+        <activity android:name=".activitys.TestDescription"></activity>
+        <activity android:name=".activitys.Chapters" />
         <activity android:name=".activitys.Questions" />
         <activity android:name=".activitys.Content" />
         <activity android:name=".activitys.Dashboard" />
         <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

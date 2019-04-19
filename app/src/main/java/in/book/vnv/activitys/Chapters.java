@@ -84,7 +84,6 @@ public class Chapters extends AppCompatActivity {
         JSONObject object = new JSONObject(string);
         for(int i=1;i <= object.length();i++) {
             JSONArray ob = object.getJSONArray(i+"");
-
             String questions = "";
             if(i==1)
                 questions = 1+" - " + ob.length();
