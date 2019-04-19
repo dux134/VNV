@@ -89,7 +89,7 @@ public class Chapters extends AppCompatActivity {
             if(i==1)
                 questions = 1+" - " + ob.length();
             else
-                questions = (((i-1)*100)+1) +" - " + (((i-1)*100)+ob.length());
+                questions = (((i-1)*100)+1) + " - " + (((i-1)*100)+ob.length());
             ChaptersDataModel ch = new ChaptersDataModel("Exercise "+i,"",ob.length()+"",questions);
             list.add(ch);
         }
