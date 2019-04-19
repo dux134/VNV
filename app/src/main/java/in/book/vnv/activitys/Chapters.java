@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,6 +28,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import in.book.vnv.R;
 import in.book.vnv.adapters.ChaptersAdapter;
@@ -77,11 +82,16 @@ public class Chapters extends AppCompatActivity {
         list.clear();
         String string = this.AssetJSONFile(chapterName+".json",getApplicationContext());
         JSONObject object = new JSONObject(string);
-        for(int i=0;i< object.length();i++) {
+        for(int i=1;i <= object.length();i++) {
             JSONArray ob = object.getJSONArray(i+"");
-            ChaptersDataModel ch = new ChaptersDataModel("Exercise "+(i+1),"",ob.length()+"","");
+
+            String questions = "";
+            if(i==1)
+                questions = 1+" - " + ob.length();
+            else
+                questions = (((i-1)*100)+1) +" - " + (((i-1)*100)+ob.length());
+            ChaptersDataModel ch = new ChaptersDataModel("Exercise "+i,"",ob.length()+"",questions);
             list.add(ch);
-            Log.d("TAG", "loadChapters: "+ch.toString());
         }
         adapter.notifyDataSetChanged();
         progressDialog.dismiss();
@@ -91,7 +101,6 @@ public class Chapters extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            list.add(new ChaptersDataModel("","","",""));
             loadChapters();
         } catch (JSONException | IOException e) {
             e.printStackTrace();
