@@ -1,7 +1,9 @@
 package in.book.vnv.activitys;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
@@ -29,6 +33,7 @@ import in.book.vnv.adapters.ChaptersAdapter;
 import in.book.vnv.adapters.QuestionAdapter;
 import in.book.vnv.entity.ChaptersDataModel;
 import in.book.vnv.entity.ContentDataModel;
+import in.book.vnv.entity.QuestionDataModel;
 
 public class Chapters extends AppCompatActivity {
     private ArrayList<ChaptersDataModel> list = new ArrayList<>();
@@ -51,22 +56,44 @@ public class Chapters extends AppCompatActivity {
         adapter = new ChaptersAdapter(list, Chapters.this, new ChaptersAdapter.RecyclerItemListener() {
             @Override
             public void onClick(View view, int adapterPosition) {
+                Questions.exerciseNo = adapterPosition+1+"";
                 startActivity(new Intent(Chapters.this,Questions.class));
             }
         });
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
-        Toast.makeText(getApplicationContext(),chapterName,Toast.LENGTH_LONG).show();
+    public String AssetJSONFile (String filename, Context context) throws IOException {
+        AssetManager manager = context.getAssets();
+        InputStream file = manager.open(filename);
+        byte[] formArray = new byte[file.available()];
+        file.read(formArray);
+        file.close();
+        return new String(formArray);
+    }
+
+    private void loadChapters() throws JSONException, IOException {
+        list.clear();
+        String string = this.AssetJSONFile(chapterName+".json",getApplicationContext());
+        JSONObject object = new JSONObject(string);
+        for(int i=0;i< object.length();i++) {
+            JSONArray ob = object.getJSONArray(i+"");
+            ChaptersDataModel ch = new ChaptersDataModel("Exercise "+(i+1),"",ob.length()+"","");
+            list.add(ch);
+            Log.d("TAG", "loadChapters: "+ch.toString());
+        }
+        adapter.notifyDataSetChanged();
+        progressDialog.dismiss();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         try {
-            loadListData();
-//            progressDialog.dismiss();
-        } catch (JSONException e) {
+            list.add(new ChaptersDataModel("","","",""));
+            loadChapters();
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -78,7 +105,7 @@ public class Chapters extends AppCompatActivity {
         for(int i=1;i<=object.length();i++) {
         JSONObject ob = object.getJSONObject(i + "");
         list.add(new ChaptersDataModel("Exercise "+i,"",ob.length()+"",""));
-    }
+        }
         Log.d("TAG", "loadContentList: "+ob1.toString());
         adapter.notifyDataSetChanged();
 }

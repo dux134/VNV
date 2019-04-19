@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ public class Questions extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private ProgressDialog progressDialog;
     public static String isSolved = "false";
+    public static String exerciseNo = "1";
     public static String chapterName = "analogy";
 
     @Override
@@ -65,11 +67,10 @@ public class Questions extends AppCompatActivity {
     private void loadQuestion() throws JSONException, IOException {
         list.clear();
         String string = this.AssetJSONFile(chapterName+".json",getApplicationContext());
-        JSONObject object = new JSONObject(string);
-        for(int i=1;i<= object.length();i++) {
-            JSONObject ob = object.getJSONObject(i+"");
-            if(ob.getString("solved").equalsIgnoreCase(isSolved))
-                list.add(new QuestionDataModel(ob.getString("question"),ob.getString("a"),ob.getString("b"),ob.getString("c"),ob.getString("d"),ob.getString("ans")));
+        JSONArray object = new JSONObject(string).getJSONArray(exerciseNo);
+        for(int i=0;i< object.length();i++) {
+            JSONObject ob = (JSONObject) object.getJSONObject(i);
+            list.add(new QuestionDataModel(ob.getString("question"),ob.getString("a"),ob.getString("b"),ob.getString("c"),ob.getString("d"),ob.getString("ans")));
         }
         adapter.notifyDataSetChanged();
         progressDialog.dismiss();

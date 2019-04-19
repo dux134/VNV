@@ -41,7 +41,7 @@ public class Content extends AppCompatActivity {
         adapter = new ContentAdapter(list, Content.this, new ContentAdapter.RecyclerItemListener() {
             @Override
             public void onClick(View view, int adapterPosition) {
-                Chapters.chapterName = adapterPosition+1 +"";
+                Chapters.chapterName = list.get(adapterPosition).getTitle();
                 startActivity(new Intent(Content.this, Chapters.class));
             }
         });
