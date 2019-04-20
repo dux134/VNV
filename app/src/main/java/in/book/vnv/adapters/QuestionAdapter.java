@@ -48,6 +48,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     }
 
     public interface RecyclerItemListener {
+        void onClick(View view, int adapterPosition);
     }
 
     public class QuestionViewHolder extends RecyclerView.ViewHolder {
@@ -65,6 +66,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
             optionC = itemView.findViewById(R.id.optionC);
             optionD = itemView.findViewById(R.id.optionD);
             this.listener = listener;
+
 
         }
     }

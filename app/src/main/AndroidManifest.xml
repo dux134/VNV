@@ -13,15 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.Test"></activity>
+        <activity android:name=".activitys.TestResult"></activity>
+        <activity android:name=".activitys.Test" />
         <activity android:name=".activitys.TestDescription" />
         <activity android:name=".activitys.Chapters" />
         <activity android:name=".activitys.Questions" />
         <activity android:name=".activitys.Content" />
         <activity android:name=".activitys.Dashboard" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6172703407759908~3267412852" />
+
         <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
