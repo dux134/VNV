@@ -19,6 +19,9 @@
         <activity android:name=".activitys.Questions" />
         <activity android:name=".activitys.Content" />
         <activity android:name=".activitys.Dashboard" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6172703407759908~3267412852" />
         <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

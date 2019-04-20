@@ -109,19 +109,19 @@ public class Dashboard extends AppCompatActivity {
         testTotal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(Dashboard.this,TestDescription.class));
             }
         });
         testSolved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(Dashboard.this,TestDescription.class));
             }
         });
         testUnsolved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(Dashboard.this,TestDescription.class));
             }
         });
     }
