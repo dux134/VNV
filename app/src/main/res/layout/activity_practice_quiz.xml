@@ -207,7 +207,7 @@
 
 
         <android.support.v7.widget.CardView
-            android:id="@+id/previous"
+            android:id="@+id/practice_previous"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
@@ -216,7 +216,7 @@
             android:layout_marginBottom="8dp"
             ads:cardBackgroundColor="@color/View_line"
             ads:cardCornerRadius="5dp"
-            ads:layout_constraintEnd_toStartOf="@+id/next"
+            ads:layout_constraintEnd_toStartOf="@+id/practice_next"
             ads:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -240,7 +240,7 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/next"
+            android:id="@+id/practice_next"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="24dp"
@@ -250,9 +250,10 @@
             ads:cardBackgroundColor="@color/View_line"
             ads:cardCornerRadius="5dp"
             ads:layout_constraintEnd_toEndOf="parent"
-            ads:layout_constraintStart_toEndOf="@+id/previous"
+            ads:layout_constraintStart_toEndOf="@+id/practice_previous"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/practice_previous">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
