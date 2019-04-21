@@ -57,17 +57,22 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         private TextView optionB;
         private TextView optionC;
         private TextView optionD;
-        private RecyclerItemListener listener;
-        public QuestionViewHolder(View itemView, RecyclerItemListener listener) {
+        private RecyclerItemListener listener1;
+        public QuestionViewHolder(View itemView, final RecyclerItemListener listener) {
             super(itemView);
             question = itemView.findViewById(R.id.question);
             optionA = itemView.findViewById(R.id.optionA);
             optionB = itemView.findViewById(R.id.optionB);
             optionC = itemView.findViewById(R.id.optionC);
             optionD = itemView.findViewById(R.id.optionD);
-            this.listener = listener;
+            this.listener1 = listener;
 
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener1.onClick(view,getAdapterPosition());
+                }
+            });
         }
     }
 }

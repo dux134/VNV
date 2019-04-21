@@ -61,8 +61,8 @@ public class Chapters extends AppCompatActivity {
         adapter = new ChaptersAdapter(list, Chapters.this, new ChaptersAdapter.RecyclerItemListener() {
             @Override
             public void onClick(View view, int adapterPosition) {
-                Questions.exerciseNo = adapterPosition+1+"";
-                startActivity(new Intent(Chapters.this,Questions.class));
+                PracticeQuiz.exerciseNo = adapterPosition+1+"";
+                startActivity(new Intent(Chapters.this,PracticeQuiz.class));
             }
         });
         recyclerView.setAdapter(adapter);
