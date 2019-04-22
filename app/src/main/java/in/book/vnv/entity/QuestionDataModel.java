@@ -7,7 +7,8 @@ public class QuestionDataModel {
     private String optionC;
     private String optionD;
     private String answer;
-    private String isolved;
+    private String description;
+    private String selectedAnswer = "";
 
     public QuestionDataModel(String question, String optionA, String optionB, String optionC, String optionD, String answer) {
         this.question = question;
@@ -18,22 +19,20 @@ public class QuestionDataModel {
         this.answer = answer;
     }
 
-    public QuestionDataModel(String question, String optionA, String optionB, String optionC, String optionD, String answer, String isolved) {
-        this.question = question;
-        this.optionA = optionA;
-        this.optionB = optionB;
-        this.optionC = optionC;
-        this.optionD = optionD;
-        this.answer = answer;
-        this.isolved = isolved;
+    public String getDescription() {
+        return description;
     }
 
-    public String getIsolved() {
-        return isolved;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setIsolved(String isolved) {
-        this.isolved = isolved;
+    public String getSelectedAnswer() {
+        return selectedAnswer;
+    }
+
+    public void setSelectedAnswer(String selectedAnswer) {
+        this.selectedAnswer = selectedAnswer;
     }
 
     public String getQuestion() {

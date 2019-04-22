@@ -22,12 +22,11 @@
   "practice": {
     "1": {
       "name": "analogy",
-      "solved": "1",
-      "total": "100",
+      "solved": "0",
+      "total": "947",
       "1": {
         "solved": "",
         "total": "",
-        "question": "",
         "questions": {
           "1": "true",
           "2": "false",

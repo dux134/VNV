@@ -42,6 +42,7 @@ public class Content extends AppCompatActivity {
             @Override
             public void onClick(View view, int adapterPosition) {
                 Chapters.chapterName = list.get(adapterPosition).getTitle();
+                PracticeQuiz.chapterNo = adapterPosition + 1+"";
                 startActivity(new Intent(Content.this, Chapters.class));
             }
         });

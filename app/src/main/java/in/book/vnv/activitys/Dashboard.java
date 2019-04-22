@@ -44,6 +44,7 @@ import in.book.vnv.R;
 import in.book.vnv.SliderViewPager;
 import in.book.vnv.adapters.DailyTestAdapter;
 import in.book.vnv.entity.DailyScore;
+import in.book.vnv.util.FileUtil;
 import me.relex.circleindicator.CircleIndicator;
 
 public class Dashboard extends AppCompatActivity {
@@ -135,42 +136,6 @@ public class Dashboard extends AppCompatActivity {
         if (!root.exists()) {
             copyFile("app.json");
         }
-        Log.d(TAG, "createAppFolder: "+readFromFile(PATH+"app.json"));
-    }
-
-    private void writeToFile(String data,String filename) {
-        try {
-            FileOutputStream out = new FileOutputStream(new File(filename));
-            out.write(data.getBytes());
-            out.flush();
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-    }
-
-    private String readFromFile(String filename) {
-        String ret = "";
-        try {
-            FileInputStream inputStream = new FileInputStream (new File(filename));
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-        return ret;
     }
 
     @Override
@@ -187,7 +152,7 @@ public class Dashboard extends AppCompatActivity {
 
     public void loadScoreData() throws IOException, JSONException {
         list1.clear();
-        String data = readFromFile(PATH+"app.json");
+        String data = FileUtil.readFromFile(PATH+"app.json");
         JSONObject object = new JSONObject(data).getJSONObject("lasttestscores");
         Log.d(TAG, "loadScoreData: " + object.length() );
         for(int i=1;i<=object.length();i++) {
@@ -247,7 +212,7 @@ public class Dashboard extends AppCompatActivity {
 
     private void loadTextFileds() {
         try {
-            String data = readFromFile(PATH + "app.json");
+            String data = FileUtil.readFromFile(PATH + "app.json");
             JSONObject object = new JSONObject(data);
             JSONObject ob1 = object.getJSONObject("quicktests");
             noOfTestGiven.setText(ob1.getString("nooftest"));
