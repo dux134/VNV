@@ -193,6 +193,9 @@ public class PracticeQuiz extends AppCompatActivity {
         String data = FileUtil.readFromFile(Dashboard.PATH + "app.json");
         jObject = new JSONObject(data).getJSONObject("practice").getJSONObject(chapterNo).getJSONObject(exerciseNo).getJSONArray("questions");
 
+        if(jObject == null) {
+
+        }
         String string = this.AssetJSONFile(Chapters.chapterName + ".json", getApplicationContext());
         JSONArray object = new JSONObject(string).getJSONArray(exerciseNo);
         for (int i = 0; i < object.length(); i++) {
