@@ -32,6 +32,7 @@ import in.book.vnv.entity.QuestionDataModel;
 import in.book.vnv.util.FileUtil;
 
 public class PracticeQuiz extends AppCompatActivity {
+    private static final String TAG = "dux";
     private ArrayList<QuestionDataModel> list = new ArrayList<>();
 
     private ProgressDialog progressDialog;
@@ -39,9 +40,9 @@ public class PracticeQuiz extends AppCompatActivity {
     public static String exerciseNo = "1";
     public static String chapterNo = "1";
 
-    private TextView question,optionA,optionB,optionC,optionD,answer,description;
-    private int questionNo=0;
-    LinearLayout linearLayoutA,linearLayoutB,linearLayoutC,linearLayoutD;
+    private TextView question, optionA, optionB, optionC, optionD, answer, description;
+    private int questionNo = 0;
+    LinearLayout linearLayoutA, linearLayoutB, linearLayoutC, linearLayoutD;
     private JSONArray jObject;
 
     @Override
@@ -71,7 +72,7 @@ public class PracticeQuiz extends AppCompatActivity {
         linearLayoutA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
+                if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("a");
                     showQuestion(questionNo);
                 }
@@ -80,7 +81,7 @@ public class PracticeQuiz extends AppCompatActivity {
         linearLayoutB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
+                if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("b");
                     showQuestion(questionNo);
                 }
@@ -89,7 +90,7 @@ public class PracticeQuiz extends AppCompatActivity {
         linearLayoutC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
+                if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("c");
                     showQuestion(questionNo);
                 }
@@ -98,7 +99,7 @@ public class PracticeQuiz extends AppCompatActivity {
         linearLayoutD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
+                if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("d");
                     showQuestion(questionNo);
                 }
@@ -108,7 +109,7 @@ public class PracticeQuiz extends AppCompatActivity {
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(0 < questionNo) {
+                if (0 < questionNo) {
                     showQuestion(--questionNo);
                 }
             }
@@ -117,7 +118,7 @@ public class PracticeQuiz extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(list.size()-1 > questionNo) {
+                if (list.size() - 1 > questionNo) {
                     showQuestion(++questionNo);
                 }
             }
@@ -150,10 +151,10 @@ public class PracticeQuiz extends AppCompatActivity {
         linearLayoutD.setBackgroundColor(Color.WHITE);
         linearLayoutB.setBackgroundColor(Color.WHITE);
 
-        if(!model.getSelectedAnswer().equals("")) {
-            setColor(model.getAnswer(),Color.GREEN);
+        if (!model.getSelectedAnswer().equals("")) {
+            setColor(model.getAnswer(), Color.GREEN);
             description.setVisibility(View.VISIBLE);
-            if(!model.getAnswer().equalsIgnoreCase(model.getSelectedAnswer()))
+            if (!model.getAnswer().equalsIgnoreCase(model.getSelectedAnswer()))
                 setColor(model.getSelectedAnswer(), Color.RED);
         } else {
             answer.setVisibility(View.INVISIBLE);
@@ -161,8 +162,8 @@ public class PracticeQuiz extends AppCompatActivity {
         }
     }
 
-    private void setColor(String option,int color) {
-        switch(option.toLowerCase()) {
+    private void setColor(String option, int color) {
+        switch (option.toLowerCase()) {
             case "a":
                 linearLayoutA.setBackgroundColor(color);
                 break;
@@ -178,7 +179,7 @@ public class PracticeQuiz extends AppCompatActivity {
         }
     }
 
-    public String AssetJSONFile (String filename, Context context) throws IOException {
+    public String AssetJSONFile(String filename, Context context) throws IOException {
         AssetManager manager = context.getAssets();
         InputStream file = manager.open(filename);
         byte[] formArray = new byte[file.available()];
@@ -189,15 +190,21 @@ public class PracticeQuiz extends AppCompatActivity {
 
     private void loadQuestion() throws JSONException, IOException {
         list.clear();
-        String data = FileUtil.readFromFile(Dashboard.PATH+"app.json");
+        String data = FileUtil.readFromFile(Dashboard.PATH + "app.json");
         jObject = new JSONObject(data).getJSONObject("practice").getJSONObject(chapterNo).getJSONObject(exerciseNo).getJSONArray("questions");
 
-        String string = this.AssetJSONFile(Chapters.chapterName+".json",getApplicationContext());
+        String string = this.AssetJSONFile(Chapters.chapterName + ".json", getApplicationContext());
         JSONArray object = new JSONObject(string).getJSONArray(exerciseNo);
-        for(int i=0;i< object.length();i++) {
-            JSONObject ob = (JSONObject) object.getJSONObject(i);
-            if(jObject.get(i).toString().equals("false"))
+        for (int i = 0; i < object.length(); i++) {
+            JSONObject ob = object.getJSONObject(i);
+            Log.d(TAG, "loadQuestion: "+jObject.length());
+            if (jObject.length() > 0) {
+                if (jObject.get(i).toString().equals("false"))
+                    list.add(new QuestionDataModel(ob.getString("question"), ob.getString("a"), ob.getString("b"), ob.getString("c"), ob.getString("d"), ob.getString("ans")));
+            }
+//            else {
                 list.add(new QuestionDataModel(ob.getString("question"), ob.getString("a"), ob.getString("b"), ob.getString("c"), ob.getString("d"), ob.getString("ans")));
+//            }
         }
     }
 
@@ -222,29 +229,36 @@ public class PracticeQuiz extends AppCompatActivity {
             JSONObject map = new JSONObject();
             JSONArray arr = new JSONArray();
             int solved = 0;
-            for(int k=0,l=0;k<jObject.length();k++) {
-                if(jObject.get(k).equals("false")) {
-
+            if (jObject.length() > 0) {
+                for (int k = 0, l = 0; k < jObject.length(); k++) {
+                    if (jObject.get(k).equals("false")) {
+                        if (!list.get(l).getSelectedAnswer().equalsIgnoreCase("")) {
+                            jObject.put(true);
+                        }
+                        l++;
+                    }
+                }
+                arr = jObject;
+            } else {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getSelectedAnswer().equalsIgnoreCase(""))
+                        arr.put(false);
+                    else {
+                        solved++;
+                        arr.put(true);
+                    }
                 }
             }
-            for(int i=0;i<list.size();i++) {
-                if(list.get(i).getSelectedAnswer().equalsIgnoreCase(""))
-                    arr.put(false);
-                else {
-                    solved++;
-                    arr.put(true);
-                }
-            }
-            map.put("questions",arr);
-            map.put("solved",solved+"");
-            map.put("total",list.size()+"");
-            ob1.put(exerciseNo,map);
+            map.put("questions", arr);
+            map.put("solved", solved + "");
+            map.put("total", list.size() + "");
+            ob1.put(exerciseNo, map);
 
             int n = Integer.parseInt(ob1.get("solved").toString());
-            ob1.put("solved",solved+n+"");
-            FileUtil.writeToFile(object.toString(),Dashboard.PATH+"app.json");
+            ob1.put("solved", solved + n + "");
+            FileUtil.writeToFile(object.toString(), Dashboard.PATH + "app.json");
 
-        } catch(Exception e) {
+        } catch (Exception e) {
         }
     }
 }
