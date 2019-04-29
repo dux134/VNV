@@ -194,7 +194,7 @@ public class PracticeQuiz extends AppCompatActivity {
         jObject = new JSONObject(data).getJSONObject("practice").getJSONObject(chapterNo).getJSONObject(exerciseNo).getJSONArray("questions");
 
         if(jObject == null) {
-
+            //TODO create in app.json
         }
         String string = this.AssetJSONFile(Chapters.chapterName + ".json", getApplicationContext());
         JSONArray object = new JSONObject(string).getJSONArray(exerciseNo);
