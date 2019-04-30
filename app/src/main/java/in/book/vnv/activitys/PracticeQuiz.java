@@ -34,6 +34,7 @@ import in.book.vnv.util.FileUtil;
 public class PracticeQuiz extends AppCompatActivity {
     private static final String TAG = "dux";
     private ArrayList<QuestionDataModel> list = new ArrayList<>();
+    private ArrayList<QuestionDataModel> listUnsolved = new ArrayList<>();
 
     private ProgressDialog progressDialog;
     public static String isSolved = "false";
@@ -74,7 +75,7 @@ public class PracticeQuiz extends AppCompatActivity {
             public void onClick(View view) {
                 if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("a");
-                    showQuestion(questionNo);
+                    showQuestion("present");
                 }
             }
         });
@@ -83,7 +84,7 @@ public class PracticeQuiz extends AppCompatActivity {
             public void onClick(View view) {
                 if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("b");
-                    showQuestion(questionNo);
+                    showQuestion("present");
                 }
             }
         });
@@ -92,7 +93,7 @@ public class PracticeQuiz extends AppCompatActivity {
             public void onClick(View view) {
                 if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("c");
-                    showQuestion(questionNo);
+                    showQuestion("present");
                 }
             }
         });
@@ -101,7 +102,7 @@ public class PracticeQuiz extends AppCompatActivity {
             public void onClick(View view) {
                 if (list.get(questionNo).getSelectedAnswer().equalsIgnoreCase("")) {
                     list.get(questionNo).setSelectedAnswer("d");
-                    showQuestion(questionNo);
+                    showQuestion("present");
                 }
             }
         });
@@ -110,7 +111,8 @@ public class PracticeQuiz extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (0 < questionNo) {
-                    showQuestion(--questionNo);
+                    questionNo--;
+                    showQuestion("previous");
                 }
             }
         });
@@ -119,7 +121,8 @@ public class PracticeQuiz extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (list.size() - 1 > questionNo) {
-                    showQuestion(++questionNo);
+                    questionNo++;
+                    showQuestion("next");
                 }
             }
         });
@@ -129,16 +132,35 @@ public class PracticeQuiz extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        showQuestion("next");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        showQuestion(questionNo);
+        showQuestion("present");
     }
 
-    private void showQuestion(int index) {
-        QuestionDataModel model = list.get(index);
+    private void showQuestion(String mode) {
+        QuestionDataModel model = list.get(questionNo);
+        switch(mode) {
+            case "next":
+                while(model.isSolved() && questionNo < list.size()-1) {
+                    questionNo++;
+                    model = list.get(questionNo);
+                }
+                break;
+            case "previous":
+                while(model.isSolved() && questionNo > 0) {
+                    questionNo--;
+                    model = list.get(questionNo);
+                }
+                break;
+            case "present":
+
+        }
+        if(model.isSolved())
+            onBackPressed();
         question.setText(model.getQuestion());
         optionA.setText(model.getOptionA());
         optionB.setText(model.getOptionB());
@@ -192,22 +214,11 @@ public class PracticeQuiz extends AppCompatActivity {
         list.clear();
         String data = FileUtil.readFromFile(Dashboard.PATH + "app.json");
         jObject = new JSONObject(data).getJSONObject("practice").getJSONObject(chapterNo).getJSONObject(exerciseNo).getJSONArray("questions");
-
-        if(jObject == null) {
-            //TODO create in app.json
-        }
         String string = this.AssetJSONFile(Chapters.chapterName + ".json", getApplicationContext());
         JSONArray object = new JSONObject(string).getJSONArray(exerciseNo);
         for (int i = 0; i < object.length(); i++) {
             JSONObject ob = object.getJSONObject(i);
-            Log.d(TAG, "loadQuestion: "+jObject.length());
-            if (jObject.length() > 0) {
-                if (jObject.get(i).toString().equals("false"))
-                    list.add(new QuestionDataModel(ob.getString("question"), ob.getString("a"), ob.getString("b"), ob.getString("c"), ob.getString("d"), ob.getString("ans")));
-            }
-//            else {
-                list.add(new QuestionDataModel(ob.getString("question"), ob.getString("a"), ob.getString("b"), ob.getString("c"), ob.getString("d"), ob.getString("ans")));
-//            }
+            list.add(new QuestionDataModel(ob.getString("question"), ob.getString("a"), ob.getString("b"), ob.getString("c"), ob.getString("d"), ob.getString("ans"),jObject.getBoolean(i)));
         }
     }
 
@@ -231,25 +242,18 @@ public class PracticeQuiz extends AppCompatActivity {
 
             JSONObject map = new JSONObject();
             JSONArray arr = new JSONArray();
-            int solved = 0;
-            if (jObject.length() > 0) {
-                for (int k = 0, l = 0; k < jObject.length(); k++) {
-                    if (jObject.get(k).equals("false")) {
-                        if (!list.get(l).getSelectedAnswer().equalsIgnoreCase("")) {
-                            jObject.put(true);
-                        }
-                        l++;
-                    }
-                }
-                arr = jObject;
-            } else {
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getSelectedAnswer().equalsIgnoreCase(""))
-                        arr.put(false);
-                    else {
-                        solved++;
-                        arr.put(true);
-                    }
+            int solved = 0,solvedNow = 0;
+            for(int i=0;i<list.size();i++) {
+                QuestionDataModel q = list.get(i);
+                if(!q.isSolved() && !q.getSelectedAnswer().equalsIgnoreCase("")) {
+                    arr.put(true);
+                    solved++;
+                    solvedNow++;
+                } if(q.isSolved()) {
+                    arr.put(true);
+                    solved++;
+                } else {
+                    arr.put(false);
                 }
             }
             map.put("questions", arr);
@@ -258,7 +262,7 @@ public class PracticeQuiz extends AppCompatActivity {
             ob1.put(exerciseNo, map);
 
             int n = Integer.parseInt(ob1.get("solved").toString());
-            ob1.put("solved", solved + n + "");
+            ob1.put("solved", solvedNow + n + "");
             FileUtil.writeToFile(object.toString(), Dashboard.PATH + "app.json");
 
         } catch (Exception e) {

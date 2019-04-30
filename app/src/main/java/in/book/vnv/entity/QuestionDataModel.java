@@ -8,15 +8,21 @@ public class QuestionDataModel {
     private String optionD;
     private String answer;
     private String description;
+    private boolean isSolved;
     private String selectedAnswer = "";
 
-    public QuestionDataModel(String question, String optionA, String optionB, String optionC, String optionD, String answer) {
+    public QuestionDataModel(String question, String optionA, String optionB, String optionC, String optionD, String answer,boolean isSolved) {
         this.question = question;
         this.optionA = optionA;
         this.optionB = optionB;
         this.optionC = optionC;
         this.optionD = optionD;
         this.answer = answer;
+        this.isSolved = isSolved;
+    }
+
+    public boolean isSolved() {
+        return isSolved;
     }
 
     public String getDescription() {
