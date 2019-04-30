@@ -86,7 +86,6 @@ public class Chapters extends AppCompatActivity {
 
         String appData = FileUtil.readFromFile(Dashboard.PATH+"app.json");
         JSONObject appOb = new JSONObject(appData).getJSONObject("practice");
-//        Log.d("TAG", "loadChapters: "+object.length());
         for(int i=1;i <= object.length();i++) {
             JSONArray ob = object.getJSONArray(i+"");
             String questions = "";
@@ -94,10 +93,11 @@ public class Chapters extends AppCompatActivity {
                 questions = 1+" - " + ob.length();
             else
                 questions = (((i-1)*100)+1) + " - " + (((i-1)*100)+ob.length());
-            String s = appOb
-                    .getJSONObject("1")
-                    .getJSONObject(i+"")
-                    .getString("solved");
+            String s = "1";
+//                    .getJSONObject("1")
+//                    .getJSONObject(i+"")
+//                    .getString("solved");
+            //TODO creare in json
 //            Log.d("TAG", "loadChapters: "+s);
             ChaptersDataModel ch = new ChaptersDataModel("Exercise "+i,s,ob.length()+"",questions);
             list.add(ch);
