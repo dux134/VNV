@@ -39,6 +39,7 @@ import in.book.vnv.adapters.QuestionAdapter;
 import in.book.vnv.entity.ChaptersDataModel;
 import in.book.vnv.entity.ContentDataModel;
 import in.book.vnv.entity.QuestionDataModel;
+import in.book.vnv.util.FileUtil;
 
 public class Chapters extends AppCompatActivity {
     private ArrayList<ChaptersDataModel> list = new ArrayList<>();
@@ -82,6 +83,9 @@ public class Chapters extends AppCompatActivity {
         list.clear();
         String string = this.AssetJSONFile(chapterName+".json",getApplicationContext());
         JSONObject object = new JSONObject(string);
+
+        String appData = FileUtil.readFromFile(Dashboard.PATH+"app.json");
+        JSONObject appOb = new JSONObject(appData).getJSONObject("practice");
         for(int i=1;i <= object.length();i++) {
             JSONArray ob = object.getJSONArray(i+"");
             String questions = "";
@@ -89,8 +93,11 @@ public class Chapters extends AppCompatActivity {
                 questions = 1+" - " + ob.length();
             else
                 questions = (((i-1)*100)+1) + " - " + (((i-1)*100)+ob.length());
-            ChaptersDataModel ch = new ChaptersDataModel("Exercise "+i,"",ob.length()+"",questions);
+            String s = appOb.getJSONObject("1").getJSONObject(i+"").getString("solved") == null ? "" : appOb.getJSONObject("1").getJSONObject(i+"").getString("solved");
+            ChaptersDataModel ch = new ChaptersDataModel("Exercise "+i,s,ob.length()+"",questions);
             list.add(ch);
+            adapter.notifyDataSetChanged();
+
         }
         adapter.notifyDataSetChanged();
         progressDialog.dismiss();
@@ -105,40 +112,40 @@ public class Chapters extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private void loadListData() throws JSONException {
-    list.clear();
-    String data = readFromFile(Dashboard.PATH+"app.json");
-    JSONObject ob1 = new JSONObject(data);
-    JSONObject object = ob1.getJSONObject("practice").getJSONObject(chapterName);
-        for(int i=1;i<=object.length();i++) {
-        JSONObject ob = object.getJSONObject(i + "");
-        list.add(new ChaptersDataModel("Exercise "+i,"",ob.length()+"",""));
-        }
-        Log.d("TAG", "loadContentList: "+ob1.toString());
-        adapter.notifyDataSetChanged();
-}
+//    private void loadListData() throws JSONException {
+//    list.clear();
+//    String data = readFromFile(Dashboard.PATH+"app.json");
+//    JSONObject ob1 = new JSONObject(data);
+//    JSONObject object = ob1.getJSONObject("practice").getJSONObject(chapterName);
+//        for(int i=1;i<=object.length();i++) {
+//        JSONObject ob = object.getJSONObject(i + "");
+//        list.add(new ChaptersDataModel("Exercise "+i,"",ob.length()+"",""));
+//        }
+//        Log.d("TAG", "loadContentList: "+ob1.toString());
+//        adapter.notifyDataSetChanged();
+//}
 
-    private String readFromFile(String filename) {
-        String ret = "";
-        try {
-            FileInputStream inputStream = new FileInputStream (new File(filename));
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-        return ret;
-    }
+//    private String readFromFile(String filename) {
+//        String ret = "";
+//        try {
+//            FileInputStream inputStream = new FileInputStream (new File(filename));
+//            if ( inputStream != null ) {
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                String receiveString = "";
+//                StringBuilder stringBuilder = new StringBuilder();
+//                while ( (receiveString = bufferedReader.readLine()) != null ) {
+//                    stringBuilder.append(receiveString);
+//                }
+//                inputStream.close();
+//                ret = stringBuilder.toString();
+//            }
+//        }
+//        catch (FileNotFoundException e) {
+//            Log.e("login activity", "File not found: " + e.toString());
+//        } catch (IOException e) {
+//            Log.e("login activity", "Can not read file: " + e.toString());
+//        }
+//        return ret;
+//    }
 }
